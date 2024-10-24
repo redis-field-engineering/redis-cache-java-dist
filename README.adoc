@@ -241,4 +241,4 @@ To report bugs, request features, or receive assistance, please https://github.c
 
 == License
 
-{name} is licensed under the Business Source License 1.1. Copyright (C) 2024 Redis, Inc. See https://github.com/redis-field-engineering/redis-sessions-java-dist/blob/main/LICENSE.md[LICENSE] for details.
+{name} is licensed under the Business Source License 1.1. Copyright (C) 2024 Redis, Inc. See https://github.com/redis-field-engineering/{dist-repo}/blob/main/LICENSE.md[LICENSE] for details.
