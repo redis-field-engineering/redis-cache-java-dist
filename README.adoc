@@ -1,0 +1,234 @@
+= Redis Cache
+:linkattrs:
+:project-owner:   redis-field-engineering
+:project-name:    redis-cache-java
+:project-group:   com.redis
+:project-version: 0.1.2
+:project-url:     https://github.com/{project-owner}/{project-name}
+:product-name:    Redis Cache
+:codecov-token:   2cAc3dgZRA
+:artifact-id:     redis-cache-core
+:imagesdir:       .github/media
+
+image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
+image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
+
+Redis Cache is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
+It provides an implementation of Spring Framework's https://docs.spring.io/spring-framework/reference/6.1/integration.html#cache[Cache Abstraction].
+
+== Usage
+
+=== Dependency
+
+.Maven
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>{project-group}</groupId>
+    <artifactId>{artifact-id}</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+.Gradle
+[source,groovy]
+[subs="attributes"]
+----
+dependencies {
+    implementation '{project-group}:{artifact-id}:{project-version}'
+}
+----
+
+=== Setup
+
+To use {product-name} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
+
+[source,java]
+-----
+@Bean
+public RedisCacheManager cacheManager(RedisModulesClient client) {
+   return RedisCacheManager.create(client);
+}
+-----
+
+`RedisCacheManager` behavior can be configured with `RedisCacheManagerBuilder`, letting you set the default `RedisCacheConfiguration` and predefined caches.
+
+[source,java]
+-----
+RedisCacheManager cacheManager = RedisCacheManager.builder(client)
+  .defaults(RedisCacheConfiguration.defaultConfig())
+  .configuration("hashCache", RedisCacheConfiguration.defaultConfig().hash())
+  .configuration("jsonCache", RedisCacheConfiguration.defaultConfig().json())
+  .configuration("stringCache", RedisCacheConfiguration.defaultConfig().string())
+  .build();
+-----
+
+As shown in the preceding example, `RedisCacheManager` allows custom configuration on a per-cache basis.
+
+The behavior of `RedisCache` created by `RedisCacheManager` is defined with `RedisCacheConfiguration`.
+
+=== Configuration
+
+The `RedisCacheConfiguration` object is the entry point to configure a Redis cache and enable its features.
+
+==== Key Function
+
+Use `keyFunction(KeyFunction function)` to set the `KeyFunction` used to compute Redis keys.
+
+Default is `KeyFunction.SIMPLE` which produces keys in the form `<cache>:<key>`.
+
+==== Key Expiration
+
+To enable entry time-to-live (TTL) use `entryTtl(Duration duration)` or `entryTtl(TtlFunction function)`.
+
+Default is `TtlFunction.PERSISTENT` which does not expire keys.
+
+==== Redis Data Type
+
+Use `redisType(RedisType type)` to change the type of data-structure backing the cache.
+
+Possible values are `HASH`, `STRING`, and `JSON`.
+
+Default is `HASH`.
+
+Each type has a corresponding value mapper which can be overriden:
+
+* `HASH`: `hashMapper(RedisHashMapper mapper)`
+* `STRING`: `stringMapper(RedisStringMapper mapper)`
+* `JSON`: `jsonMapper(RedisStringMapper mapper)`
+
+==== Client-Side Caching
+
+Client-side caching (also known as local or near caching) can be enabled by setting `localCache(Map<String, Object> cache)`.
+
+For example with a simple `java.util.Map` implementation: `localCache(new HashMap<>())`.
+
+For more control over the behavior of the local cache it is recommended to use an in-memory cache implementation like https://github.com/ben-manes/caffeine[Caffeine]:
+
+[source,java]
+----
+Cache<String, Object> localCache = Caffeine.newBuilder()
+            .maximumSize(10000)
+            .expireAfterWrite(Duration.ofMinutes(5))
+            .build();
+return RedisCacheConfiguration.defaultConfig().localCache(localCache.asMap());
+----
+
+See the https://github.com/ben-manes/caffeine/wiki[Caffeine Documentation] for more configuration options.
+
+==== Metrics
+
+{product-name} uses Micrometer to publish metrics.
+To enable metrics, set a `MeterRegistry` in your `RedisCacheConfiguration`:
+
+[source,java]
+----
+RedisCacheConfiguration.defaultConfig().meterRegistry(registry);
+----
+
+The following metrics are published:
+
+[cols="2,2,1,5"]
+|===
+| Name | Tags | Type | Description
+
+| `cache.gets`
+| `result=hit\|miss`
+| Counter
+| The number of times cache lookup methods have returned a cached (hit) or uncached (miss) value.
+
+| `cache.puts`
+| 
+| Counter
+| The number of entries added to the cache.
+
+| `cache.evictions`
+| 
+| Counter
+| The number of times the cache was evicted.
+
+| `cache.gets.latency`
+| 
+| Timer
+| Cache get latency
+
+| `cache.puts.latency`
+| 
+| Timer
+| Cache put latency
+
+| `cache.evictions.latency`
+| 
+| Timer
+| Cache eviction latency
+
+| `cache.local.gets`
+| `result=hit\|miss`
+| Counter
+| The number of times local cache lookup methods have returned a cached (hit) or uncached (miss) value.
+
+| `cache.local.evictions`
+| 
+| Counter
+| The number of times the local cache was evicted.
+
+
+|===
+
+NOTE: All metrics expose their corresponding cache name as a tag: `name=<cache>`.
+
+== Quick Start
+
+To understand how {product-name} works, it's best to try it for yourself.
+
+This example showcases a Spring Boot application using {product-name}.
+
+First, clone this git repository:
+
+[source,console,subs="verbatim,attributes"]
+----
+git clone {project-url}.git
+cd {project-name}
+----
+
+Next, register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org].
+
+Set the following environment variable with the token:
+
+[source,console]
+----
+export TMDB_TOKEN=<your API read-access token>
+----
+
+Finally use Docker Compose to launch containers for Redis and the {product-name} demo app instance:
+
+[source,console]
+----
+docker compose up
+----
+
+You can then access the demo at http://localhost:8080/[localhost:8080].
+
+As you click around on the different pages, notice how the response time improves after the first time you request a page.
+
+image:redis-cache-demo.png[]
+
+Open another browser window and access Grafana at http://localhost:3000/[localhost:3000].
+Use username/password `admin`/`admin` to log in.
+You can skip changing password.
+
+Arrange your browser windows with the demo app on the left and Grafana on the right:
+
+image:redis-cache-demo-grafana.png[]
+
+Notice the HTTP response time decreasing with cache hits, and increasing with API requests.
+
+Now click on the http://localhost:8080/movies/search[Search] link to search the cache, for example with keyword `corleone`.
+
+Notice how quickly search results are returned: the search feature is powered by Redis.
+
+Search response time can be visualized with the panel at the bottom of the Grafana dashboard.
+
+image:redis-cache-demo-search.png[]
+
