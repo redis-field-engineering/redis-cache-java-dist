@@ -1,10 +1,11 @@
-= Redis Cache
+= Redis Cache Java
 :linkattrs:
 :project-owner:   redis-field-engineering
-:project-name:    redis-cache-java
+:project-name:    redis-cache
+:dist-repo:       redis-cache-java-dist
 :project-group:   com.redis
 :project-version: 0.1.2
-:project-url:     https://github.com/{project-owner}/{project-name}
+:project-url:     https://github.com/{project-owner}/{dist-repo}
 :product-name:    Redis Cache
 :codecov-token:   2cAc3dgZRA
 :artifact-id:     redis-cache-core
@@ -189,7 +190,7 @@ First, clone this git repository:
 [source,console,subs="verbatim,attributes"]
 ----
 git clone {project-url}.git
-cd {project-name}
+cd {dist-repo}
 ----
 
 Next, register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org].
