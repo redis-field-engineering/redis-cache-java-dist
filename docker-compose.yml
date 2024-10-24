@@ -4,13 +4,13 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./samples/redis-cache-demo/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./demo/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
   grafana:
     image: grafana/grafana
     ports:
       - 3000:3000
     volumes:
-      - ./samples/redis-cache-demo/grafana/provisioning:/etc/grafana/provisioning
+      - ./demo/grafana/provisioning:/etc/grafana/provisioning
   redis:
     image: redis/redis-stack-server
     ports:
