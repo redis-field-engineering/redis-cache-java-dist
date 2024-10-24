@@ -7,7 +7,6 @@
 :project-group:   com.redis
 :project-version: 0.1.2
 :project-url:     https://github.com/{project-owner}/{dist-repo}
-:product-name:    Redis Cache
 :codecov-token:   2cAc3dgZRA
 :artifact-id:     redis-cache-core
 :imagesdir:       .github/media
@@ -15,7 +14,7 @@
 image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
 image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
 
-Redis Cache is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
+{name} is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
 It provides an implementation of Spring Framework's https://docs.spring.io/spring-framework/reference/6.1/integration.html#cache[Cache Abstraction].
 
 == Usage
@@ -44,7 +43,7 @@ dependencies {
 
 === Setup
 
-To use {product-name} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
+To use {name} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
 
 [source,java]
 -----
@@ -121,7 +120,7 @@ See the https://github.com/ben-manes/caffeine/wiki[Caffeine Documentation] for m
 
 ==== Metrics
 
-{product-name} uses Micrometer to publish metrics.
+{name} uses Micrometer to publish metrics.
 To enable metrics, set a `MeterRegistry` in your `RedisCacheConfiguration`:
 
 [source,java]
@@ -182,9 +181,9 @@ NOTE: All metrics expose their corresponding cache name as a tag: `name=<cache>`
 
 == Quick Start
 
-To understand how {product-name} works, it's best to try it for yourself.
+To understand how {name} works, it's best to try it for yourself.
 
-This example showcases a Spring Boot application using {product-name}.
+This example showcases a Spring Boot application using {name}.
 
 First, clone this git repository:
 
@@ -203,7 +202,7 @@ Set the following environment variable with the token:
 export TMDB_TOKEN=<your API read-access token>
 ----
 
-Finally use Docker Compose to launch containers for Redis and the {product-name} demo app instance:
+Finally use Docker Compose to launch containers for Redis and the {name} demo app instance:
 
 [source,console]
 ----
