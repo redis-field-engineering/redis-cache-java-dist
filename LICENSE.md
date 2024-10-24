@@ -9,7 +9,7 @@ Redis Ltd., on behalf of itself and its affiliates and subsidiaries worldwide
 Licensed Work:
 
 
-The Licensed Work means the Redis Cache Java client libraries described [here](https://github.com/redis-field-engineering/redis-streams-java-dist)
+The Licensed Work means the Redis Cache Java client libraries described [here](https://github.com/redis-field-engineering/redis-cache-java-dist)
 
 Additional Use Grant:
 
