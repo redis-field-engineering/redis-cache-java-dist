@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/base :: head}"></head>
+
+<body>
+	<header>
+		<nav class="container">
+			<ul>
+				<li><strong>Redis Cache Demo</strong></li>
+			</ul>
+			<ul>
+				<li><a href="/movies/popular">Popular</a></li>
+				<li><a href="/movies/top-rated">Top-Rated</a></li>
+				<li><a href="/movies/upcoming">Upcoming</a></li>
+				<li>Search</li>
+			</ul>
+		</nav>
+	</header>
+	<main class="container">
+		<h1>Search Movies</h1>
+		<section id="query">
+			<form th:action="@{/movies/search}" method="get">
+				<nav>
+					<ul>
+						<li><input type="search" name="query" id="query" placeholder="Search" th:value="${query}" />
+						</li>
+						<li><input type="submit" value="Submit"></li>
+					</ul>
+				</nav>
+			</form>
+		</section>
+		<section id="results">
+			<article th:each="movie : ${movies}">
+				<header>
+					<h2 th:text="${movie.title}"></h2>
+				</header>
+				<p th:text="${movie.overview}"></p>
+				<footer>
+					<div class="overflow-auto">
+						<table class="striped">
+							<tbody th:each="field: ${fields}">
+								<th th:text="${field}"></th>
+								<td th:text="${movie.get(field)}"></td>
+							</tbody>
+						</table>
+					</div>
+				</footer>
+			</article>
+		</section>
+	</main>
+
+</body>
+
+</html>
