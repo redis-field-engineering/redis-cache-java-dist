@@ -17,7 +17,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-    implementation 'com.redis:redis-cache-spring:0.1.2'
+    implementation 'com.redis:redis-cache-spring:0.2.0'
 	implementation 'uk.co.conoregan:themoviedbapi:2.2.0'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
