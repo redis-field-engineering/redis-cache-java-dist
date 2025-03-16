@@ -1,21 +1,83 @@
 = Redis Cache Java
+:toc:
+:toc-placement!:
 :linkattrs:
-:project-owner:   redis-field-engineering
-:project-name:    redis-cache
-:dist-repo:       redis-cache-java-dist
-:name:            Redis Cache Java
-:project-group:   com.redis
-:project-version: 0.1.2
-:project-url:     https://github.com/{project-owner}/{dist-repo}
-:codecov-token:   2cAc3dgZRA
-:artifact-id:     redis-cache-core
-:imagesdir:       .github/media
+:imagesdir:         .github/media
+:codecov-token:     2cAc3dgZRA
+:artifact-id:       redis-cache-core
+:project-dist:      redis-cache-java-dist
+:project-group:     com.redis
+:project-name:      redis-cache-java
+:project-owner:     redis-field-engineering
+:project-title:     Redis Cache Java
+:project-url:       https://github.com/{project-owner}/{project-dist}
+:project-version: 0.2.0
 
 image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
 image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
 
-{name} is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
+{project-title} is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
 It provides an implementation of Spring Framework's https://docs.spring.io/spring-framework/reference/6.1/integration.html#cache[Cache Abstraction].
+
+toc::[]
+
+== Quick Start
+
+To understand how {project-title} works, it's best to try it for yourself.
+
+This example showcases a Spring Boot application using {project-title}.
+
+First, clone this git repository:
+
+[source,console,subs="verbatim,attributes"]
+----
+git clone {project-url}.git
+cd {project-dist}
+----
+
+Next, register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org,window=tmdb].
+
+Set the following environment variable with the token:
+
+[source,console]
+----
+export TMDB_TOKEN=<your API read-access token>
+----
+
+Finally use Docker Compose to launch containers for Redis and the {project-title} demo app instance:
+
+[source,console]
+----
+docker compose up
+----
+
+// tag::demoSteps[]
+
+You can access the demo at http://localhost:8080/[http://localhost:8080,window=demo].
+
+As you click around on the different pages, notice how the response time improves after the first time you request a page.
+
+image:redis-cache-demo.png[]
+
+Open another browser window and access the http://localhost:3000/d/1[Grafana dashboard,window=grafana].
+Use username/password `admin`/`admin` to log in.
+You can skip changing password.
+
+Arrange your browser windows with the demo app on the left and Grafana on the right:
+
+image:redis-cache-demo-grafana.png[]
+
+Notice the HTTP response time decreasing with cache hits, and increasing with API requests.
+
+Now click on the http://localhost:8080/movies/search[Search,window=demo] link to search the cache, for example with keyword `corleone`.
+
+Notice how quickly search results are returned: the search feature is powered by Redis.
+
+Search response time can be visualized with the panel at the bottom of the Grafana dashboard.
+
+image:redis-cache-demo-search.png[]
+
+// end::demoSteps[]
 
 == Usage
 
@@ -43,7 +105,7 @@ dependencies {
 
 === Setup
 
-To use {name} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
+To use {project-title} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
 
 [source,java]
 -----
@@ -52,6 +114,17 @@ public RedisCacheManager cacheManager(RedisModulesClient client) {
    return RedisCacheManager.create(client);
 }
 -----
+
+Then you can tag the methods in your application that you want to apply caching to.
+
+.Cached Method Example
+[source,java]
+----
+@Cacheable("popular")
+public List<MovieDb> fetchPopularMovies(int page) throws Exception {
+    return tmdbService.fetchPopularMovies(page);
+}
+----
 
 `RedisCacheManager` behavior can be configured with `RedisCacheManagerBuilder`, letting you set the default `RedisCacheConfiguration` and predefined caches.
 
@@ -120,7 +193,7 @@ See the https://github.com/ben-manes/caffeine/wiki[Caffeine Documentation] for m
 
 ==== Metrics
 
-{name} uses Micrometer to publish metrics.
+{project-title} uses Micrometer to publish metrics.
 To enable metrics, set a `MeterRegistry` in your `RedisCacheConfiguration`:
 
 [source,java]
@@ -179,65 +252,11 @@ The following metrics are published:
 
 NOTE: All metrics expose their corresponding cache name as a tag: `name=<cache>`.
 
-== Quick Start
-
-To understand how {name} works, it's best to try it for yourself.
-
-This example showcases a Spring Boot application using {name}.
-
-First, clone this git repository:
-
-[source,console,subs="verbatim,attributes"]
-----
-git clone {project-url}.git
-cd {dist-repo}
-----
-
-Next, register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org].
-
-Set the following environment variable with the token:
-
-[source,console]
-----
-export TMDB_TOKEN=<your API read-access token>
-----
-
-Finally use Docker Compose to launch containers for Redis and the {name} demo app instance:
-
-[source,console]
-----
-docker compose up
-----
-
-You can then access the demo at http://localhost:8080/[localhost:8080].
-
-As you click around on the different pages, notice how the response time improves after the first time you request a page.
-
-image:redis-cache-demo.png[]
-
-Open another browser window and access Grafana at http://localhost:3000/[localhost:3000].
-Use username/password `admin`/`admin` to log in.
-You can skip changing password.
-
-Arrange your browser windows with the demo app on the left and Grafana on the right:
-
-image:redis-cache-demo-grafana.png[]
-
-Notice the HTTP response time decreasing with cache hits, and increasing with API requests.
-
-Now click on the http://localhost:8080/movies/search[Search] link to search the cache, for example with keyword `corleone`.
-
-Notice how quickly search results are returned: the search feature is powered by Redis.
-
-Search response time can be visualized with the panel at the bottom of the Grafana dashboard.
-
-image:redis-cache-demo-search.png[]
-
 == Support
 
-{name} is supported by Redis, Inc. for enterprise-tier customers as a 'Developer Tool' under the https://redis.io/legal/software-support-policy/[Redis Software Support Policy.] For non enterprise-tier customers we supply support for {name} on a good-faith basis.
-To report bugs, request features, or receive assistance, please https://github.com/{project-owner}/{dist-repo}/issues[file an issue].
+{project-title} is supported by Redis, Inc. for enterprise-tier customers as a 'Developer Tool' under the https://redis.io/legal/software-support-policy/[Redis Software Support Policy.] For non enterprise-tier customers we supply support for {project-title} on a good-faith basis.
+To report bugs, request features, or receive assistance, please {project-url}/issues[file an issue].
 
 == License
 
-{name} is licensed under the Business Source License 1.1. Copyright (C) 2024 Redis, Inc. See https://github.com/redis-field-engineering/{dist-repo}/blob/main/LICENSE.md[LICENSE] for details.
+{project-title} is licensed under the Business Source License 1.1. Copyright (C) 2024 Redis, Inc. See {project-url}/blob/main/LICENSE.md[LICENSE] for details.
