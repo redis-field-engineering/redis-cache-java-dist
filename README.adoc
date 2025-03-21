@@ -7,11 +7,11 @@
 :artifact-id:       redis-cache-core
 :project-dist:      redis-cache-java-dist
 :project-group:     com.redis
-:project-name:      redis-cache-java
+:project-name:      redis-cache
 :project-owner:     redis-field-engineering
 :project-title:     Redis Cache Java
 :project-url:       https://github.com/{project-owner}/{project-dist}
-:project-version: 0.2.0
+:project-version: 0.2.1
 
 image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
 image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
@@ -168,9 +168,12 @@ Default is `HASH`.
 
 Each type has a corresponding value mapper which can be overriden:
 
-* `HASH`: `hashMapper(RedisHashMapper mapper)`
-* `STRING`: `stringMapper(RedisStringMapper mapper)`
-* `JSON`: `jsonMapper(RedisStringMapper mapper)`
+`HASH`:: Set with `RedisCacheConfiguration.hashMapper(RedisHashMapper mapper)`. Defaults to `com.redis.cache.common.mapping.ObjectHashMapper`.
+
+`STRING`:: Set with `RedisCacheConfiguration.stringMapper(RedisStringMapper mapper)`. Defaults to `com.redis.cache.common.mapping.JdkSerializationStringMapper`. 
+
+`JSON`:: Set with `RedisCacheConfiguration.jsonMapper(RedisStringMapper mapper)`. Defaults to `com.redis.cache.common.mapping.GenericJackson2JsonMapper`.
+
 
 ==== Client-Side Caching
 
