@@ -1,11 +1,13 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.5'
+	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.redis'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0'
+
+ext['lettuce.version'] = '6.5.5.RELEASE'
 
 repositories {
 	mavenCentral()
@@ -17,7 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-    implementation 'com.redis:redis-cache-spring:0.2.0'
-	implementation 'uk.co.conoregan:themoviedbapi:2.2.0'
+    implementation 'com.redis:redis-cache-spring:0.3.2'
+	implementation 'uk.co.conoregan:themoviedbapi:2.3.1'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
