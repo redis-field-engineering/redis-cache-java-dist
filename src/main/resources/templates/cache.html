@@ -1,0 +1,26 @@
+<!DOCTYPE html>
++<html xmlns:th="http://www.thymeleaf.org">
++
++<!-- <head th:insert="~{fragments/base :: head}"></head> -->
++
++<head>
++    <title>Cache Info</title>
++</head>
++<body>
++    <h1>Cache Information</h1>
++    <table>
++        <thead>
++            <tr>
++                <th>Cache Name</th>
++                <th>Count</th>
++            </tr>
++        </thead>
++        <tbody>
++            <tr th:each="entry : ${cacheInfo}">
++                <td th:text="${entry.key}"></td>
++                <td th:text="${entry.value}"></td>
++            </tr>
++        </tbody>
++    </table>
++</body>
++</html>
