@@ -15,13 +15,13 @@ services:
     image: redis/redis-stack-server
     ports:
       - 6379:6379
-  demo:
-    image: ghcr.io/redis-field-engineering/redis-cache-demo:early-access
-    restart: on-failure
-    depends_on:
-      - redis
-    ports:
-      - 8080:8080
-    environment:
-      - SPRING_DATA_REDIS_HOST=redis
-      - TMDB_TOKEN=${TMDB_TOKEN}
+#  demo:
+#    image: ghcr.io/redis-field-engineering/redis-cache-demo:early-access
+#    restart: on-failure
+#    depends_on:
+#      - redis
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - SPRING_DATA_REDIS_HOST=redis
+#      - TMDB_TOKEN=${TMDB_TOKEN}
