@@ -16,7 +16,7 @@ public class CacheConfig {
 
 	@Bean
 	CacheManager cacheManager(RedisModulesClient client, MeterRegistry registry) {
-		RedisCacheConfiguration hashConfig = RedisCacheConfiguration.defaultConfig().meterRegistry(registry)
+		RedisCacheConfiguration hashConfig = RedisCacheConfiguration.defaultConfig().indexEnabled(true).meterRegistry(registry)
 				.redisType(RedisType.HASH);
 		RedisCacheConfiguration stringConfig = RedisCacheConfiguration.defaultConfig().meterRegistry(registry)
 				.redisType(RedisType.STRING);
