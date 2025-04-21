@@ -44,11 +44,18 @@ Set the following environment variable with the token:
 export TMDB_TOKEN=<your API read-access token>
 ----
 
-Finally use Docker Compose to launch containers for Redis and the {project-title} demo app instance:
+Use Docker Compose to launch containers for Redis, Prometheus and Grafana:
 
 [source,console]
 ----
 docker compose up
+----
+
+Finally, launch the demo app with this command:
+
+[source,console]
+----
+./gradlew bootRun
 ----
 
 // tag::demoSteps[]
