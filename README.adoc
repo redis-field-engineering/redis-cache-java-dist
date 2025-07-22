@@ -11,7 +11,7 @@
 :project-owner:     redis-field-engineering
 :project-title:     Redis Cache Java
 :project-url:       https://github.com/{project-owner}/{project-dist}
-:project-version: 0.5.0
+:project-version: ..
 
 image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
 image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
