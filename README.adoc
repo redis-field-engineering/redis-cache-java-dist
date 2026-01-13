@@ -7,7 +7,6 @@
 :project-owner:     redis-field-engineering
 :project-title:     Redis Cache Java
 :project-url:       https://github.com/{project-owner}/{project-dist}
-:project-version: 0.5.0
 :docs-url:          https://redis-field-engineering.github.io/redis-cache-java
 
 {project-title} is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
@@ -69,40 +68,16 @@ cd demo
 
 See link:demo/README.md[demo/README.md] for detailed instructions.
 
-== Installation
-
-To use {project-title} in your own application:
-
-.Maven
-[source,xml]
-[subs="verbatim,attributes"]
-----
-<dependency>
-    <groupId>{project-group}</groupId>
-    <artifactId>{artifact-id}</artifactId>
-    <version>{project-version}</version>
-</dependency>
-----
-
-.Gradle
-[source,groovy]
-[subs="attributes"]
-----
-dependencies {
-    implementation '{project-group}:{artifact-id}:{project-version}'
-}
-----
-
 == Documentation
 
-For complete documentation including usage, configuration, and features, visit:
+For complete documentation including installation, usage, configuration, and features, visit:
 
 **{docs-url}[{docs-url}]**
 
 Topics covered:
 
 * {docs-url}/quick-start.html[Quick Start] - Complete walkthrough
-* {docs-url}/usage.html[Usage] - Setup and basic configuration
+* {docs-url}/usage.html[Usage] - Installation and basic configuration
 * {docs-url}/configuration.html[Configuration] - Detailed configuration options
 * {docs-url}/features/async-mode.html[Async Mode] - Non-blocking cache operations
 * {docs-url}/features/webflux-support.html[WebFlux Support] - Reactive programming support
