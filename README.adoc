@@ -1,9 +1,6 @@
 = Redis Cache Java
-:toc:
-:toc-placement!:
 :linkattrs:
 :imagesdir:         .github/media
-:codecov-token:     2cAc3dgZRA
 :artifact-id:       redis-cache-core
 :project-dist:      redis-cache-java-dist
 :project-group:     com.redis
@@ -11,84 +8,19 @@
 :project-owner:     redis-field-engineering
 :project-title:     Redis Cache Java
 :project-url:       https://github.com/{project-owner}/{project-dist}
-:project-version: ..
-
-image:https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions/workflows/early-access.yml"]
-image:https://codecov.io/gh/{project-owner}/{project-name}/graph/badge.svg?token={codecov-token}["Coverage", link="https://codecov.io/gh/{project-owner}/{project-name}"]
+:project-version: 0.5.0
+:docs-url:          https://redis-field-engineering.github.io/redis-cache-java
 
 {project-title} is a cache abstraction for the Java ecosystem that leverages enterprise Redis features like indexing and query.
 It provides an implementation of Spring Framework's https://docs.spring.io/spring-framework/reference/6.1/integration.html#cache[Cache Abstraction].
 
-toc::[]
+📚 **Full documentation is available at {docs-url}[{docs-url}]**
 
 == Quick Start
 
-To understand how {project-title} works, it's best to try it for yourself.
+See the {docs-url}/quick-start.html[Quick Start Guide] for a complete walkthrough.
 
-This example showcases a Spring Boot application using {project-title}.
-
-First, clone this git repository:
-
-[source,console,subs="verbatim,attributes"]
-----
-git clone {project-url}.git
-cd {project-dist}
-----
-
-Next, register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org,window=tmdb].
-
-Set the following environment variable with the token:
-
-[source,console]
-----
-export TMDB_TOKEN=<your API read-access token>
-----
-
-Use Docker Compose to launch containers for Redis, Prometheus and Grafana:
-
-[source,console]
-----
-docker compose up
-----
-
-Finally, launch the demo app with this command:
-
-[source,console]
-----
-./gradlew bootRun
-----
-
-// tag::demoSteps[]
-
-You can access the demo at http://localhost:8080/[http://localhost:8080,window=demo].
-
-As you click around on the different pages, notice how the response time improves after the first time you request a page.
-
-image:redis-cache-demo.png[]
-
-Open another browser window and access the http://localhost:3000/d/1[Grafana dashboard,window=grafana].
-Use username/password `admin`/`admin` to log in.
-You can skip changing password.
-
-Arrange your browser windows with the demo app on the left and Grafana on the right:
-
-image:redis-cache-demo-grafana.png[]
-
-Notice the HTTP response time decreasing with cache hits, and increasing with API requests.
-
-Now click on the http://localhost:8080/movies/search[Search,window=demo] link to search the cache, for example with keyword `corleone`.
-
-Notice how quickly search results are returned: the search feature is powered by Redis.
-
-Search response time can be visualized with the panel at the bottom of the Grafana dashboard.
-
-image:redis-cache-demo-search.png[]
-
-// end::demoSteps[]
-
-== Usage
-
-=== Dependency
+== Installation
 
 .Maven
 [source,xml]
@@ -110,165 +42,21 @@ dependencies {
 }
 ----
 
-=== Setup
+== Documentation
 
-To use {project-title} as a backing implementation, add `RedisCacheManager` to your configuration as follows:
+For complete documentation including usage, configuration, and features, visit:
 
-[source,java]
------
-@Bean
-public RedisCacheManager cacheManager(RedisModulesClient client) {
-   return RedisCacheManager.create(client);
-}
------
+**{docs-url}[{docs-url}]**
 
-Then you can tag the methods in your application that you want to apply caching to.
+Topics covered:
 
-.Cached Method Example
-[source,java]
-----
-@Cacheable("popular")
-public List<MovieDb> fetchPopularMovies(int page) throws Exception {
-    return tmdbService.fetchPopularMovies(page);
-}
-----
-
-`RedisCacheManager` behavior can be configured with `RedisCacheManagerBuilder`, letting you set the default `RedisCacheConfiguration` and predefined caches.
-
-[source,java]
------
-RedisCacheManager cacheManager = RedisCacheManager.builder(client)
-  .defaults(RedisCacheConfiguration.defaultConfig())
-  .configuration("hashCache", RedisCacheConfiguration.defaultConfig().hash())
-  .configuration("jsonCache", RedisCacheConfiguration.defaultConfig().json())
-  .configuration("stringCache", RedisCacheConfiguration.defaultConfig().string())
-  .build();
------
-
-As shown in the preceding example, `RedisCacheManager` allows custom configuration on a per-cache basis.
-
-The behavior of `RedisCache` created by `RedisCacheManager` is defined with `RedisCacheConfiguration`.
-
-=== Configuration
-
-The `RedisCacheConfiguration` object is the entry point to configure a Redis cache and enable its features.
-
-==== Key Function
-
-Use `keyFunction(KeyFunction function)` to set the `KeyFunction` used to compute Redis keys.
-
-Default is `KeyFunction.SIMPLE` which produces keys in the form `<cache>:<key>`.
-
-==== Key Expiration
-
-To enable entry time-to-live (TTL) use `entryTtl(Duration duration)` or `entryTtl(TtlFunction function)`.
-
-Default is `TtlFunction.PERSISTENT` which does not expire keys.
-
-==== Redis Data Type
-
-Use `redisType(RedisType type)` to change the type of data-structure backing the cache.
-
-Possible values are `HASH`, `STRING`, and `JSON`.
-
-Default is `HASH`.
-
-Each type has a corresponding value mapper which can be overriden:
-
-`HASH`:: Set with `RedisCacheConfiguration.hashMapper(RedisHashMapper mapper)`. Defaults to `com.redis.cache.common.mapping.ObjectHashMapper`.
-
-`STRING`:: Set with `RedisCacheConfiguration.stringMapper(RedisStringMapper mapper)`. Defaults to `com.redis.cache.common.mapping.JdkSerializationStringMapper`. 
-
-`JSON`:: Set with `RedisCacheConfiguration.jsonMapper(RedisStringMapper mapper)`. Defaults to `com.redis.cache.common.mapping.GenericJackson2JsonMapper`.
-
-==== Indexing and Querying
-
-Use `RedisCacheConfiguration.indexEnabled(true)` to create an index on the cache automatically.
-
-The default index name is `<cacheName>Idx` and can be overriden with `RedisCacheConfiguration.indexName(String)`.
-
-WHen indexing is enabled you can get a count of entries in the cache using `RedisCache.getCount()`.
-
-
-==== Client-Side Caching
-
-Client-side caching (also known as local or near caching) can be enabled by setting `localCache(Map<String, Object> cache)`.
-
-For example with a simple `java.util.Map` implementation: `localCache(new HashMap<>())`.
-
-For more control over the behavior of the local cache it is recommended to use an in-memory cache implementation like https://github.com/ben-manes/caffeine[Caffeine]:
-
-[source,java]
-----
-Cache<String, Object> localCache = Caffeine.newBuilder()
-            .maximumSize(10000)
-            .expireAfterWrite(Duration.ofMinutes(5))
-            .build();
-return RedisCacheConfiguration.defaultConfig().localCache(localCache.asMap());
-----
-
-See the https://github.com/ben-manes/caffeine/wiki[Caffeine Documentation] for more configuration options.
-
-==== Metrics
-
-{project-title} uses Micrometer to publish metrics.
-To enable metrics, set a `MeterRegistry` in your `RedisCacheConfiguration`:
-
-[source,java]
-----
-RedisCacheConfiguration.defaultConfig().meterRegistry(registry);
-----
-
-The following metrics are published:
-
-[cols="2,2,1,5"]
-|===
-| Name | Tags | Type | Description
-
-| `cache.gets`
-| `result=hit\|miss`
-| Counter
-| The number of times cache lookup methods have returned a cached (hit) or uncached (miss) value.
-
-| `cache.puts`
-| 
-| Counter
-| The number of entries added to the cache.
-
-| `cache.evictions`
-| 
-| Counter
-| The number of times the cache was evicted.
-
-| `cache.gets.latency`
-| 
-| Timer
-| Cache get latency
-
-| `cache.puts.latency`
-| 
-| Timer
-| Cache put latency
-
-| `cache.evictions.latency`
-| 
-| Timer
-| Cache eviction latency
-
-| `cache.local.gets`
-| `result=hit\|miss`
-| Counter
-| The number of times local cache lookup methods have returned a cached (hit) or uncached (miss) value.
-
-| `cache.local.evictions`
-| 
-| Counter
-| The number of times the local cache was evicted.
-
-
-|===
-
-NOTE: All metrics expose their corresponding cache name as a tag: `name=<cache>`.
+* {docs-url}/usage.html[Usage] - Setup and basic configuration
+* {docs-url}/configuration.html[Configuration] - Detailed configuration options
+* {docs-url}/features/async-mode.html[Async Mode] - Non-blocking cache operations
+* {docs-url}/features/webflux-support.html[WebFlux Support] - Reactive programming support
+* {docs-url}/features/indexing-and-querying.html[Indexing and Querying] - Search capabilities
+* {docs-url}/features/client-side-caching.html[Client-Side Caching] - Local caching
+* {docs-url}/reference/metrics.html[Metrics] - Monitoring and observability
 
 == Support
 
