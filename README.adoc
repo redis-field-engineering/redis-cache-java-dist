@@ -16,11 +16,63 @@ It provides an implementation of Spring Framework's https://docs.spring.io/sprin
 
 📚 **Full documentation is available at {docs-url}[{docs-url}]**
 
+== Repository Structure
+
+This repository contains a demo application showcasing Redis Cache Java features:
+
+[source]
+----
+redis-cache-java-dist/
+├── demo/                    # Spring Boot demo application
+│   ├── src/                # Demo source code
+│   ├── build.gradle        # Demo build configuration
+│   └── README.md           # Demo-specific instructions
+├── infrastructure/          # Docker Compose setup
+│   ├── docker-compose.yml  # Redis, Prometheus, Grafana
+│   ├── prometheus/         # Prometheus configuration
+│   └── grafana/            # Grafana dashboards
+└── README.adoc             # This file
+----
+
 == Quick Start
 
-See the {docs-url}/quick-start.html[Quick Start Guide] for a complete walkthrough.
+=== 1. Start Infrastructure
+
+[source,console]
+----
+cd infrastructure
+docker compose up
+----
+
+This starts Redis, Prometheus, and Grafana.
+
+=== 2. Set TMDB Token
+
+Register and create an API read-access token at https://developer.themoviedb.org/docs/getting-started[themoviedb.org].
+
+[source,console]
+----
+export TMDB_TOKEN=<your API read-access token>
+----
+
+=== 3. Run the Demo
+
+[source,console]
+----
+cd demo
+./gradlew bootRun
+----
+
+=== 4. Access the Application
+
+* **Demo App**: http://localhost:8080
+* **Grafana Dashboard**: http://localhost:3000/d/1 (username/password: `admin`/`admin`)
+
+See link:demo/README.md[demo/README.md] for detailed instructions.
 
 == Installation
+
+To use {project-title} in your own application:
 
 .Maven
 [source,xml]
@@ -50,6 +102,7 @@ For complete documentation including usage, configuration, and features, visit:
 
 Topics covered:
 
+* {docs-url}/quick-start.html[Quick Start] - Complete walkthrough
 * {docs-url}/usage.html[Usage] - Setup and basic configuration
 * {docs-url}/configuration.html[Configuration] - Detailed configuration options
 * {docs-url}/features/async-mode.html[Async Mode] - Non-blocking cache operations
