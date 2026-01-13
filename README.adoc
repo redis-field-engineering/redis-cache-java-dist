@@ -1,6 +1,5 @@
 = Redis Cache Java
 :linkattrs:
-:imagesdir:         .github/media
 :artifact-id:       redis-cache-core
 :project-dist:      redis-cache-java-dist
 :project-group:     com.redis
